@@ -17,13 +17,12 @@ function initSocialTabs(container = document) {
   });
 }
 
-/* Barba support */
-document.addEventListener("DOMContentLoaded", initSocialTabs);
+barba.hooks.afterEnter(({ next }) => {
+  if (next.namespace === "summary") {
+    initSocialTabs(next.container);
+  }
+});
 
-if (window.barba) {
-  barba.hooks.afterEnter(({ next }) => {
-    if (next.namespace === "summary") {
-      initSocialTabs();
-    }
-  });
+if (!window.barba) {
+  document.addEventListener("DOMContentLoaded", initSocialTabs);
 }
