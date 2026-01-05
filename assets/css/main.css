@@ -75,10 +75,11 @@ body {
 
 .hero-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   min-height: 100vh;
   padding: 4rem;
-  gap: 4rem;
+  gap: 3rem;
+  overflow: hidden;
 }
 
 .hero-left {
