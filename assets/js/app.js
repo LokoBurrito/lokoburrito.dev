@@ -32,3 +32,19 @@ barba.hooks.afterEnter(() => {
     animateProjects();
   }
 });
+
+function animateAbout() {
+  gsap.from(".about-block", {
+    opacity: 0,
+    x: -30,
+    stagger: 0.2,
+    duration: 0.6,
+    ease: "power2.out"
+  });
+}
+
+barba.hooks.afterEnter(() => {
+  if (document.querySelector("[data-barba-namespace='about']")) {
+    animateAbout();
+  }
+});
