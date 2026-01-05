@@ -1,19 +1,19 @@
-function initSocialTabs() {
-  const tabs = document.querySelectorAll(".social-tab");
-  const panels = document.querySelectorAll(".social-panel");
+function initSocialTabs(container = document) {
+  const tabs = container.querySelectorAll(".social-tab");
+  const panels = container.querySelectorAll(".social-panel");
 
   if (!tabs.length) return;
 
   tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
+    tab.onclick = () => {
       const target = tab.dataset.social;
 
       tabs.forEach(t => t.classList.remove("active"));
       panels.forEach(p => p.classList.remove("active"));
 
       tab.classList.add("active");
-      document.getElementById(target)?.classList.add("active");
-    });
+      container.querySelector(`#${target}`)?.classList.add("active");
+    };
   });
 }
 
