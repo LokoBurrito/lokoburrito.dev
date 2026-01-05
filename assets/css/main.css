@@ -33,3 +33,37 @@ body {
   text-decoration: none;
   font-size: 14px;
 }
+.page-header {
+  padding: 6rem 4rem 2rem;
+}
+
+.page-sub {
+  color: #aaa;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  padding: 2rem 4rem 6rem;
+}
+
+.project-card {
+  background: #111;
+  border: 1px solid #222;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  color: #00ffcc;
+  font-size: 12px;
+}
+
