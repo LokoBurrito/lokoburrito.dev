@@ -67,3 +67,8 @@ body {
   font-size: 12px;
 }
 
+.about-block {
+  padding: 3rem 4rem;
+  border-left: 2px solid #00ffcc;
+  margin: 2rem 0;
+}
