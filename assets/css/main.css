@@ -96,7 +96,7 @@ body {
 .slideshow {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 680px;
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 12px;
