@@ -48,3 +48,9 @@ barba.hooks.afterEnter(() => {
     animateAbout();
   }
 });
+
+import { initSlideshow } from "./slideshow.js";
+
+barba.hooks.afterEnter(() => {
+  initSlideshow();
+});
