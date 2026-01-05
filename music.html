@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>music library</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/music.css" />
+</head>
+
+<body data-barba="wrapper">
+
+  <nav class="chapters">
+    <a href="/">Home</a>
+    <a href="/projects.html">Projects</a>
+    <a href="/about.html">About</a>
+    <a href="/summary.html">Summary</a>
+    <a href="/quotes.html">Quotes</a>
+  </nav>
+
+  
+<main data-barba="container" data-barba-namespace="music">
+
+  <section class="music-wrapper">
+    <h1 class="fx-text">music store</h1>
+
+    <p class="music-desc">
+      a assorted selection of music that i like (not categorized (yet))
+    </p>
+
+    <div class="music-shelf">
+      <button class="song" data-src="/assets/music/song1.mp3">
+        <strong>THE STARS ARE FALLING</strong>
+        <span>LABIRHIN</span>
+      </button>
+
+      <button class="song" data-src="/assets/music/song2.mp3">
+        <strong>Shake</strong>
+        <span>IShowSpeed (aka IShowTheMeat or IShowSped)</span>
+      </button>
+    </div>
+
+    <audio id="audioPlayer" controls preload="none"></audio>
+  </section>
+
+</main>
+
+<script src="/assets/js/music.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>
