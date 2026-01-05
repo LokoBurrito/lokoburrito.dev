@@ -121,3 +121,18 @@ body {
   opacity: 1;
   transform: translateX(0) scale(1);
 }
+/* for the mobile people */
+@media (max-width: 900px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+
+  .hero-right {
+    margin-top: 2rem;
+  }
+
+  .slideshow {
+    max-width: 100%;
+  }
+}
