@@ -121,7 +121,7 @@ body {
   opacity: 1;
   transform: translateX(0) scale(1);
 }
-/* for the mobile people */
+
 @media (max-width: 900px) {
   .hero-split {
     grid-template-columns: 1fr;
@@ -136,7 +136,7 @@ body {
     max-width: 100%;
   }
 }
-/* back to pc*/
+
 .quotes-page {
   padding: 6rem 4rem;
   max-width: 1200px;
