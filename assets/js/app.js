@@ -16,3 +16,19 @@ barba.init({
 });
 
 window.addEventListener("load", animateText);
+
+function animateProjects() {
+  gsap.from(".project-card", {
+    opacity: 0,
+    y: 40,
+    stagger: 0.15,
+    duration: 0.6,
+    ease: "power2.out"
+  });
+}
+
+barba.hooks.afterEnter(() => {
+  if (document.querySelector("[data-barba-namespace='projects']")) {
+    animateProjects();
+  }
+});
