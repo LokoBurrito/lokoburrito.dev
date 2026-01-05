@@ -54,3 +54,11 @@ import { initSlideshow } from "./slideshow.js";
 barba.hooks.afterEnter(() => {
   initSlideshow();
 });
+
+import { initQuotes } from "./quotes.js";
+
+barba.hooks.afterEnter(({ next }) => {
+  if (next.namespace === "quotes") {
+    initQuotes();
+  }
+});
