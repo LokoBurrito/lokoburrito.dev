@@ -1,1 +1,56 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projects — LokoBurrito</title>
+  <link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+<body data-barba="wrapper">
+
+<nav class="chapters">
+  <a href="/">Home</a>
+  <a href="/projects.html" class="active">Projects</a>
+  <a href="/about.html">About</a>
+  <a href="/summary.html">Summary</a>
+</nav>
+
+<main data-barba="container" data-barba-namespace="projects">
+
+  <section class="page-header">
+    <h1 class="fx-text">Projects</h1>
+    <p class="page-sub">Things I’ve built, broken, and rebuilt</p>
+  </section>
+
+  <section class="projects-grid">
+
+    <div class="project-card">
+      <h2>Roblox Simulator Engine</h2>
+      <p>Server-side spawning, analytics UI, performance testing place.</p>
+      <span class="tag">Roblox</span>
+      <span class="tag">Lua</span>
+    </div>
+
+    <div class="project-card">
+      <h2>Discord Economy Bot</h2>
+      <p>Tickets, stats, fishing, shop, JSON persistence.</p>
+      <span class="tag">Discord</span>
+      <span class="tag">Python</span>
+    </div>
+
+    <div class="project-card">
+      <h2>Portfolio Infrastructure</h2>
+      <p>GitHub + Cloudflare Pages + Workers.</p>
+      <span class="tag">Web</span>
+      <span class="tag">Infra</span>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="https://unpkg.com/@barba/core"></script>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script type="module" src="/assets/js/app.js"></script>
+
+</body>
+</html>
