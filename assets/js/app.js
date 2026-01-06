@@ -159,31 +159,32 @@ export function animateSales(container = document) {
 
   stats.forEach(stat => {
     if (stat.dataset.animated === "true") return;
+
     stat.dataset.animated = "true";
 
-    const raw = stat.dataset.value;
-    if (!raw || isNaN(raw)) return;
+    const target = Number(stat.dataset.value);
+    if (isNaN(target)) return;
 
-    const target = Number(raw);
     const isMoney = stat.dataset.money === "true";
-
+    
     let current = 0;
-    const step = Math.max(1, Math.ceil(target / 60));
+    const increment = Math.max(1, Math.ceil(target / 60));
+    const durationPerFrame = 16;
 
-    const interval = setInterval(() => {
-      current += step;
+    const timer = setInterval(() => {
+      current += increment;
 
       if (current >= target) {
-        stat.textContent = isMoney
-          ? `$${target.toLocaleString()}`
-          : target.toLocaleString();
-        clearInterval(interval);
-      } else {
-        stat.textContent = isMoney
-          ? `$${current.toLocaleString()}`
-          : current.toLocaleString();
+        current = target;
+        clearInterval(timer);
       }
-    }, 16);
+
+      if (isMoney) {
+        stat.textContent = `$${current.toLocaleString()}`;
+      } else {
+        stat.textContent = current.toLocaleString();
+      }
+    }, durationPerFrame);
   });
 }
 
