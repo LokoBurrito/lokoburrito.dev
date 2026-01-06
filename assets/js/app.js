@@ -65,16 +65,93 @@ function initQuotes(container = document) {
 
 function initMusic(container = document) {
   const player = container.querySelector("#audioPlayer");
-  const songs = container.querySelectorAll(".song");
+  const songs = container.querySelectorAll(".song-item");
+  const queue = [];
+  let currentIndex = -1;
 
-  if (!player || !songs.length) return;
+  const currentCover = container.querySelector("#current-cover");
+  const currentTitle = container.querySelector("#current-title");
+  const currentArtist = container.querySelector("#current-artist");
+  const playPauseBtn = container.querySelector("#play-pause-btn");
+  const prevBtn = container.querySelector("#prev-btn");
+  const nextBtn = container.querySelector("#next-btn");
+  const rewindBtn = container.querySelector("#rewind-btn");
+  const forwardBtn = container.querySelector("#forward-btn");
+  const progressFill = container.querySelector(".progress-fill");
+  const progressBar = container.querySelector(".progress-bar");
+  const currentTimeEl = container.querySelector("#current-time");
+  const durationEl = container.querySelector("#duration");
+
+  function loadSong(index) {
+    if (index < 0 || index >= queue.length) return;
+    const song = queue[index];
+    player.src = song.src;
+    currentCover.src = song.cover || "/assets/media/default.jpg";
+    currentTitle.textContent = song.title;
+    currentArtist.textContent = song.artist;
+    currentIndex = index;
+    player.play();
+    playPauseBtn.textContent = "❚❚";
+  }
+
+  function playSong(songEl) {
+    const src = songEl.dataset.src;
+    const cover = songEl.dataset.cover;
+    const title = songEl.querySelector("strong").textContent;
+    const artist = songEl.querySelector("span").textContent;
+
+    const existingIndex = queue.findIndex(s => s.src === src);
+    if (existingIndex !== -1) {
+      loadSong(existingIndex);
+      return;
+    }
+
+    queue.push({src, cover, title, artist});
+    loadSong(queue.length - 1);
+  }
 
   songs.forEach(song => {
-    song.onclick = () => {
-      player.src = song.dataset.src;
-      player.play().catch(() => {});
-    };
+    song.addEventListener("click", () => playSong(song));
   });
+
+  playPauseBtn.addEventListener("click", () => {
+    if (player.paused) {
+      player.play();
+      playPauseBtn.textContent = "❚❚";
+    } else {
+      player.pause();
+      playPauseBtn.textContent = "▶";
+    }
+  });
+
+  prevBtn.addEventListener("click", () => loadSong(currentIndex - 1));
+  nextBtn.addEventListener("click", () => loadSong(currentIndex + 1));
+  rewindBtn.addEventListener("click", () => player.currentTime -= 10);
+  forwardBtn.addEventListener("click", () => player.currentTime += 10);
+
+  player.addEventListener("timeupdate", () => {
+    if (player.duration) {
+      const progress = (player.currentTime / player.duration) * 100;
+      progressFill.style.width = `${progress}%`;
+      currentTimeEl.textContent = formatTime(player.currentTime);
+      durationEl.textContent = formatTime(player.duration);
+    }
+  });
+
+  progressBar.addEventListener("click", (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const percent = offsetX / rect.width;
+    player.currentTime = percent * player.duration;
+  });
+
+  player.addEventListener("ended", () => nextBtn.click());
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
 }
 
 function animateSales(container = document) {
