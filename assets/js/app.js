@@ -82,19 +82,35 @@ function animateSales(container = document) {
   if (!stats.length) return;
 
   stats.forEach(stat => {
-    const target = Number(stat.dataset.value);
-    if (!target) return;
+    const rawValue = stat.dataset.value;
+
+    if (isNaN(rawValue) || rawValue.trim() === "" || rawValue.includes("discord.gg")) {
+      stat.textContent = rawValue || "0";
+      return;
+    }
+
+    const target = Number(rawValue);
+    if (isNaN(target)) {
+      stat.textContent = "0";
+      return;
+    }
 
     let current = 0;
-    const step = Math.max(1, Math.floor(target / 60));
+    const increment = Math.max(1, Math.ceil(target / 60));
+    const isMoney = target >= 1000;
 
     const timer = setInterval(() => {
-      current += step;
+      current += increment;
+
       if (current >= target) {
-        stat.textContent = target >= 1000 ? `$${target.toLocaleString()}` : target;
+        stat.textContent = isMoney 
+          ? `$${target.toLocaleString()}` 
+          : target.toLocaleString();
         clearInterval(timer);
       } else {
-        stat.textContent = target >= 1000 ? `$${current.toLocaleString()}` : current;
+        stat.textContent = isMoney 
+          ? `$${current.toLocaleString()}` 
+          : current.toLocaleString();
       }
     }, 16);
   });
