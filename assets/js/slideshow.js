@@ -1,30 +1,16 @@
-function initQuotes(container = document) {
-  const cards = container.querySelectorAll(".quote-card");
-  if (!cards.length) return;
+let slideshowInterval = null;
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.2 }
-  );
+function initSlideshow(container = document) {
+  const slides = container.querySelectorAll(".slide");
+  if (!slides.length) return;
 
-  cards.forEach(card => observer.observe(card));
-}
+  let index = 0;
+  slides[0].classList.add("active");
 
-document.addEventListener("DOMContentLoaded", () => {
-  initQuotes(document);
-});
-
-if (window.barba) {
-  barba.hooks.afterEnter(({ next }) => {
-    if (next.namespace === "quotes") {
-      initQuotes(next.container);
-    }
-  });
+  clearInterval(slideshowInterval);
+  slideshowInterval = setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 3500);
 }
