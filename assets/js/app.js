@@ -156,42 +156,37 @@ function initMusic(container = document) {
 
 function animateSales(container = document) {
   const stats = container.querySelectorAll(".stat-number");
-  if (!stats.length) return;
 
   stats.forEach(stat => {
-    const rawValue = stat.dataset.value;
+    if (stat.dataset.animated) return;
+    stat.dataset.animated = "true";
 
-    if (isNaN(rawValue) || rawValue.trim() === "" || rawValue.includes("discord.gg")) {
-      stat.textContent = rawValue || "0";
+    const raw = stat.dataset.value;
+    if (!raw || isNaN(raw)) {
+      stat.textContent = raw || "0";
       return;
     }
 
-    const target = Number(rawValue);
-    if (isNaN(target)) {
-      stat.textContent = "0";
-      return;
-    }
-
+    const target = Number(raw);
     let current = 0;
-    const increment = Math.max(1, Math.ceil(target / 60));
-    const isMoney = target >= 1000;
+    const step = Math.max(1, Math.ceil(target / 60));
 
     const timer = setInterval(() => {
-      current += increment;
-
+      current += step;
       if (current >= target) {
-        stat.textContent = isMoney 
-          ? `$${target.toLocaleString()}` 
-          : target.toLocaleString();
+        stat.textContent = target >= 1000
+          ? `$${target.toLocaleString()}`
+          : target;
         clearInterval(timer);
       } else {
-        stat.textContent = isMoney 
-          ? `$${current.toLocaleString()}` 
-          : current.toLocaleString();
+        stat.textContent = target >= 1000
+          ? `$${current.toLocaleString()}`
+          : current;
       }
     }, 16);
   });
 }
+
 
 function initSocialTabs(container = document) {
   const tabs = container.querySelectorAll(".social-tab");
