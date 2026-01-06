@@ -297,6 +297,10 @@ a {
   border: 1px solid #222;
   background: rgba(255,255,255,0.03);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem; 
 }
 
 .stat-number {
@@ -305,9 +309,21 @@ a {
 }
 
 .stat-label {
-  opacity: 0.6;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem; /* space between number and label */
+}
+
+.stat-label {
+  font-size: 0.9rem; /* slightly smaller if needed */
+  opacity: 0.8;
+}
 
 @keyframes fadeSlide {
   from {
