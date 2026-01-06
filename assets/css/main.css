@@ -137,52 +137,6 @@ body {
   }
 }
 
-.quotes-page {
-  padding: 6rem 4rem;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.page-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  margin-bottom: 4rem;
-  text-align: center;
-}
-
-.quotes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.quote-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #222;
-  border-radius: 14px;
-  padding: 2rem;
-  backdrop-filter: blur(6px);
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all 0.6s ease;
-}
-
-.quote-card.visible {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.quote-text {
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.quote-author {
-  display: block;
-  margin-top: 1.2rem;
-  font-size: 0.9rem;
-  opacity: 0.6;
-}
-
 .summary-wrapper {
   max-width: 900px;
   margin: auto;
