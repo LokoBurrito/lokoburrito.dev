@@ -162,35 +162,30 @@ export function animateSales(container = document) {
     stat.dataset.animated = "true";
 
     const raw = stat.dataset.value;
-
-    if (!raw || isNaN(raw)) {
-      stat.textContent = raw;
-      return;
-    }
+    if (!raw || isNaN(raw)) return;
 
     const target = Number(raw);
+    const isMoney = stat.dataset.money === "true";
+
     let current = 0;
     const step = Math.max(1, Math.ceil(target / 60));
 
     const interval = setInterval(() => {
       current += step;
+
       if (current >= target) {
-        stat.textContent =
-          target >= 1000
-            ? `$${target.toLocaleString()}`
-            : target;
+        stat.textContent = isMoney
+          ? `$${target.toLocaleString()}`
+          : target.toLocaleString();
         clearInterval(interval);
       } else {
-        stat.textContent =
-          target >= 1000
-            ? `$${current.toLocaleString()}`
-            : current;
+        stat.textContent = isMoney
+          ? `$${current.toLocaleString()}`
+          : current.toLocaleString();
       }
     }, 16);
   });
 }
-
-
 
 function initSocialTabs(container = document) {
   const tabs = container.querySelectorAll(".social-tab");
