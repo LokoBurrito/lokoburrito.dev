@@ -184,17 +184,18 @@ if (hasBarba) {
     }]
   });
 
-  barba.hooks.afterEnter(({ next }) => {
-    initSlideshow(next.container);
-    initQuotes(next.container);
-    initMusic(next.container);
-    animateStats(next.container);
-    initSocialTabs(next.container);
+barba.hooks.afterEnter(({ next }) => {
+  initSlideshow(next.container);
+  initQuotes(next.container);
+  initMusic(next.container);
+  animateStats(next.container);
+  initSocialTabs(next.container);
+  scrollTitles(next.container);
 
-    if (next.namespace === "projects") animateProjects(next.container);
-    if (next.namespace === "about") animateAbout(next.container);
-  });
-}
+  if (next.namespace === "projects") animateProjects(next.container);
+  if (next.namespace === "about") animateAbout(next.container);
+});
+
 
 /* fallback*/
 document.addEventListener("DOMContentLoaded", () => {
@@ -206,4 +207,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initMusic();
   animateStats();
   initSocialTabs();
+  scrollTitles();
 });
