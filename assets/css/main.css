@@ -382,6 +382,7 @@ a {
   background: #0b0b0b;
   transition: width 0.1s linear;
 }
+
 .sales-wrapper {
   max-width: 1000px;
   margin: auto;
@@ -401,10 +402,6 @@ a {
   border: 1px solid #222;
   background: rgba(255,255,255,0.03);
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5rem; 
 }
 
 .stat-number {
@@ -413,20 +410,7 @@ a {
 }
 
 .stat-label {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-.stat-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.9rem; 
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 @keyframes fadeSlide {
