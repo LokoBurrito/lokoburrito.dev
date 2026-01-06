@@ -97,7 +97,7 @@ function initMusic(container = document) {
     const song = queue[index];
 
     player.src = song.src;
-    if (currentCover) currentCover.src = song.cover || "/assets/media/default.jpg";
+    if (currentCover) currentCover.src = song.cover || "/assets/media/placeholder.png";
     if (currentTitle) currentTitle.textContent = song.title;
     if (currentArtist) currentArtist.textContent = song.artist;
 
