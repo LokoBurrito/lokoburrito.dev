@@ -1,4 +1,3 @@
-/* health checks */
 const hasGSAP = typeof gsap !== "undefined";
 const hasBarba = typeof barba !== "undefined";
 
@@ -6,33 +5,13 @@ if (hasGSAP && gsap.ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/* scroll effects (forgot to include oops) */
-function scrollTitles(container = document) {
-  if (!hasGSAP || !gsap.ScrollTrigger) return;
-
-  container.querySelectorAll("section").forEach(section => {
-    const title = section.querySelector("h2");
-    if (!title) return;
-
-    gsap.from(title, {
-      scrollTrigger: {
-        trigger: section,
-        start: "top 80%",
-        once: true
-      },
-      y: 40,
-      opacity: 0,
-      duration: 0.6,
-      ease: "power2.out"
-    });
-  });
-}
-
-/* text effects */
 function animateText(container = document) {
   if (!hasGSAP) return;
 
   container.querySelectorAll(".fx-text").forEach(el => {
+    if (el.dataset.fxDone) return;
+    el.dataset.fxDone = "true";
+
     const text = el.innerText;
     el.innerHTML = "";
 
@@ -40,53 +19,19 @@ function animateText(container = document) {
       const span = document.createElement("span");
       span.innerHTML = char === " " ? "&nbsp;" : char;
       span.style.opacity = 0;
+      span.style.transform = "translateY(10px)";
       el.appendChild(span);
 
       gsap.to(span, {
         opacity: 1,
         y: 0,
-        delay: i * 0.05,
-        duration: 0.4,
+        delay: i * 0.04,
+        duration: 0.35,
         ease: "power2.out"
       });
     });
   });
 }
-
-/* projects page */
-function animateProjects(container = document) {
-  if (!hasGSAP) return;
-
-  const cards = container.querySelectorAll(".project-card");
-  if (!cards.length) return;
-
-  gsap.from(cards, {
-    opacity: 0,
-    y: 40,
-    stagger: 0.15,
-    duration: 0.6,
-    ease: "power2.out"
-  });
-}
-
-/* about */
-function animateAbout(container = document) {
-  if (!hasGSAP) return;
-
-  const blocks = container.querySelectorAll(".about-block");
-  if (!blocks.length) return;
-
-  gsap.from(blocks, {
-    opacity: 0,
-    x: -30,
-    stagger: 0.2,
-    duration: 0.6,
-    ease: "power2.out"
-  });
-}
-
-/* slideshow */
-let slideshowInterval = null;
 
 function initSlideshow(container = document) {
   const slides = container.querySelectorAll(".slide");
@@ -95,73 +40,66 @@ function initSlideshow(container = document) {
   let index = 0;
   slides[0].classList.add("active");
 
-  clearInterval(slideshowInterval);
-  slideshowInterval = setInterval(() => {
+  setInterval(() => {
     slides[index].classList.remove("active");
     index = (index + 1) % slides.length;
     slides[index].classList.add("active");
   }, 3500);
 }
 
-/* quotes */
 function initQuotes(container = document) {
   const cards = container.querySelectorAll(".quote-card");
   if (!cards.length) return;
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.2 }
-  );
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
 
   cards.forEach(card => observer.observe(card));
 }
 
-/* music player */
 function initMusic(container = document) {
   const player = container.querySelector("#audioPlayer");
   const songs = container.querySelectorAll(".song");
+
   if (!player || !songs.length) return;
 
   songs.forEach(song => {
     song.onclick = () => {
       player.src = song.dataset.src;
-      player.play();
+      player.play().catch(() => {});
     };
   });
 }
 
-/* money money */
-function animateStats(container = document) {
+function animateSales(container = document) {
   const stats = container.querySelectorAll(".stat-number");
   if (!stats.length) return;
 
   stats.forEach(stat => {
     const target = Number(stat.dataset.value);
+    if (!target) return;
+
     let current = 0;
     const step = Math.max(1, Math.floor(target / 60));
 
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
       current += step;
       if (current >= target) {
-        stat.textContent =
-          target >= 1000 ? `$${target.toLocaleString()}` : target;
-        clearInterval(interval);
+        stat.textContent = target >= 1000 ? `$${target.toLocaleString()}` : target;
+        clearInterval(timer);
       } else {
-        stat.textContent =
-          target >= 1000 ? `$${current.toLocaleString()}` : current;
+        stat.textContent = target >= 1000 ? `$${current.toLocaleString()}` : current;
       }
     }, 16);
   });
 }
 
-/* social tabs */
 function initSocialTabs(container = document) {
   const tabs = container.querySelectorAll(".social-tab");
   const panels = container.querySelectorAll(".social-panel");
@@ -180,58 +118,50 @@ function initSocialTabs(container = document) {
   });
 }
 
-/* transitions */
-function pageTransition() {
-  if (!hasGSAP) return;
-  return gsap.to("main", { opacity: 0, duration: 0.4 });
-}
+function initScrollFX(container = document) {
+  if (!hasGSAP || !gsap.ScrollTrigger) return;
 
-function pageEnter() {
-  if (!hasGSAP) return;
-  gsap.from("main", {
-    opacity: 0,
-    y: 20,
-    duration: 0.6,
-    ease: "power2.out"
+  container.querySelectorAll("section").forEach(section => {
+    const h2 = section.querySelector("h2");
+    if (!h2) return;
+
+    gsap.from(h2, {
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        once: true
+      },
+      y: 40,
+      opacity: 0,
+      duration: 0.6
+    });
   });
 }
 
-/* barba init */
+function initPage(container = document) {
+  animateText(container);
+  initSlideshow(container);
+  initQuotes(container);
+  initMusic(container);
+  animateSales(container);
+  initSocialTabs(container);
+  initScrollFX(container);
+}
+
 if (hasBarba) {
   barba.init({
     transitions: [{
       leave() {
-        return pageTransition();
+        return gsap.to("main", { opacity: 0, duration: 0.3 });
       },
       enter({ next }) {
-        pageEnter();
-        animateText(next.container);
+        gsap.from(next.container, { opacity: 0, y: 20, duration: 0.4 });
+        initPage(next.container);
       }
     }]
   });
-
-  barba.hooks.afterEnter(({ next }) => {
-    initSlideshow(next.container);
-    initQuotes(next.container);
-    initMusic(next.container);
-    animateStats(next.container);
-    initSocialTabs(next.container);
-    scrollTitles(next.container);
-
-    if (next.namespace === "projects") animateProjects(next.container);
-    if (next.namespace === "about") animateAbout(next.container);
-  });
 }
 
-/* fallback*/
 document.addEventListener("DOMContentLoaded", () => {
-  animateText();
-  animateProjects();
-  animateAbout();
-  initSlideshow();
-  initQuotes();
-  initMusic();
-  animateStats();
-  initSocialTabs();
-  scrollTitles();
+  initPage(document);
 });
