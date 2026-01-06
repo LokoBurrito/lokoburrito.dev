@@ -379,7 +379,7 @@ a {
 .progress-fill {
   height: 100%;
   width: 0%;
-  background: #0b0b0b;
+  background: #00ffcc;
   transition: width 0.1s linear;
 }
 
