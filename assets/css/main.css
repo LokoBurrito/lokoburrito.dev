@@ -413,6 +413,30 @@ a {
   opacity: 0.6;
 }
 
+.stat-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 255, 204, 0.15);
+}
+
+.stat-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #00ffcc;
+}
+
+.stat-label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
 @keyframes fadeSlide {
   from {
     opacity: 0;
