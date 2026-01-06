@@ -2,6 +2,32 @@
 const hasGSAP = typeof gsap !== "undefined";
 const hasBarba = typeof barba !== "undefined";
 
+if (hasGSAP && gsap.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+/* scroll effects (forgot to include oops) */
+function scrollTitles(container = document) {
+  if (!hasGSAP || !gsap.ScrollTrigger) return;
+
+  container.querySelectorAll("section").forEach(section => {
+    const title = section.querySelector("h2");
+    if (!title) return;
+
+    gsap.from(title, {
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        once: true
+      },
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    });
+  });
+}
+
 /* text effects */
 function animateText(container = document) {
   if (!hasGSAP) return;
@@ -184,18 +210,18 @@ if (hasBarba) {
     }]
   });
 
-barba.hooks.afterEnter(({ next }) => {
-  initSlideshow(next.container);
-  initQuotes(next.container);
-  initMusic(next.container);
-  animateStats(next.container);
-  initSocialTabs(next.container);
-  scrollTitles(next.container);
+  barba.hooks.afterEnter(({ next }) => {
+    initSlideshow(next.container);
+    initQuotes(next.container);
+    initMusic(next.container);
+    animateStats(next.container);
+    initSocialTabs(next.container);
+    scrollTitles(next.container);
 
-  if (next.namespace === "projects") animateProjects(next.container);
-  if (next.namespace === "about") animateAbout(next.container);
-});
-
+    if (next.namespace === "projects") animateProjects(next.container);
+    if (next.namespace === "about") animateAbout(next.container);
+  });
+}
 
 /* fallback*/
 document.addEventListener("DOMContentLoaded", () => {
