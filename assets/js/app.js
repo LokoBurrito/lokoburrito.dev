@@ -154,16 +154,17 @@ function initMusic(container = document) {
   }
 }
 
-function animateSales(container = document) {
+export function animateSales(container = document) {
   const stats = container.querySelectorAll(".stat-number");
 
   stats.forEach(stat => {
-    if (stat.dataset.animated) return;
+    if (stat.dataset.animated === "true") return;
     stat.dataset.animated = "true";
 
     const raw = stat.dataset.value;
+
     if (!raw || isNaN(raw)) {
-      stat.textContent = raw || "0";
+      stat.textContent = raw;
       return;
     }
 
@@ -171,21 +172,24 @@ function animateSales(container = document) {
     let current = 0;
     const step = Math.max(1, Math.ceil(target / 60));
 
-    const timer = setInterval(() => {
+    const interval = setInterval(() => {
       current += step;
       if (current >= target) {
-        stat.textContent = target >= 1000
-          ? `$${target.toLocaleString()}`
-          : target;
-        clearInterval(timer);
+        stat.textContent =
+          target >= 1000
+            ? `$${target.toLocaleString()}`
+            : target;
+        clearInterval(interval);
       } else {
-        stat.textContent = target >= 1000
-          ? `$${current.toLocaleString()}`
-          : current;
+        stat.textContent =
+          target >= 1000
+            ? `$${current.toLocaleString()}`
+            : current;
       }
     }, 16);
   });
 }
+
 
 
 function initSocialTabs(container = document) {
