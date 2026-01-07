@@ -470,3 +470,143 @@ a {
     font-size: 2rem;
   }
 }
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.stat-number,
+.stat-title,
+.stat-label {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.stat-label {
+  margin-top: auto;
+  opacity: 0.75;
+}
+
+button,
+.controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+}
+
+.stat-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--banner-url);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  filter: saturate(1.05);
+}
+
+.stat-link:hover::before {
+  opacity: 0.22;
+}
+
+.stat-link > * {
+  position: relative;
+  z-index: 1;
+}
+
+.music-library {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-height: 75vh;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+.song-item img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.song-info strong,
+.song-info span {
+  text-align: left;
+}
+
+.controls {
+  justify-content: center;
+  min-width: 90px;
+}
+
+@media (max-width: 700px) {
+  .chapters {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    bottom: 12px;
+    padding: 0 12px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .projects-grid,
+  .summary-wrapper,
+  .sales-wrapper,
+  .quotes-wrapper,
+  .about-wrapper,
+  main {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .player-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .current-song {
+    min-width: 0;
+    width: 100%;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .progress-container {
+    width: 100%;
+  }
+
+  .controls button {
+    font-size: 2.3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .song-item img {
+    width: 48px;
+    height: 48px;
+  }
+}

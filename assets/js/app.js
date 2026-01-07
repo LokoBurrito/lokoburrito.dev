@@ -78,10 +78,6 @@ function initMusic(container = document) {
   const currentTitle = container.querySelector("#current-title");
   const currentArtist = container.querySelector("#current-artist");
   const playPauseBtn = container.querySelector("#play-pause-btn");
-  const prevBtn = container.querySelector("#prev-btn");
-  const nextBtn = container.querySelector("#next-btn");
-  const rewindBtn = container.querySelector("#rewind-btn");
-  const forwardBtn = container.querySelector("#forward-btn");
   const progressFill = container.querySelector(".progress-fill");
   const progressBar = container.querySelector(".progress-bar");
   const currentTimeEl = container.querySelector("#current-time");
@@ -92,7 +88,18 @@ function initMusic(container = document) {
   const queue = [];
   let currentIndex = -1;
 
-  function loadSong(index) {
+  function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
+
+  function setPlayingUI(isPlaying) {
+    playPauseBtn.textContent = isPlaying ? "❚❚" : "▶";
+  }
+
+  function loadSong(index, autoplay = true) {
     if (index < 0 || index >= queue.length) return;
     const song = queue[index];
 
@@ -102,11 +109,16 @@ function initMusic(container = document) {
     if (currentArtist) currentArtist.textContent = song.artist;
 
     currentIndex = index;
-    player.play().catch(() => {});
-    playPauseBtn.textContent = "❚❚";
+
+    if (autoplay) {
+      player.play().catch(() => {});
+      setPlayingUI(true);
+    } else {
+      setPlayingUI(false);
+    }
   }
 
-  function playSong(songEl) {
+  function enqueueAndPlay(songEl) {
     const src = songEl.dataset.src;
     const cover = songEl.dataset.cover;
     const title = songEl.querySelector("strong")?.textContent || "Unknown";
@@ -114,81 +126,56 @@ function initMusic(container = document) {
 
     const existingIndex = queue.findIndex(s => s.src === src);
     if (existingIndex !== -1) {
-      loadSong(existingIndex);
+      loadSong(existingIndex, true);
       return;
     }
 
     queue.push({ src, cover, title, artist });
-    loadSong(queue.length - 1);
+    loadSong(queue.length - 1, true);
   }
 
-  songs.forEach(song => song.addEventListener("click", () => playSong(song)));
+  songs.forEach(songEl => {
+    songEl.addEventListener("click", () => enqueueAndPlay(songEl));
+  });
 
   playPauseBtn.addEventListener("click", () => {
+    if (!player.src) return;
+
     if (player.paused) {
       player.play().catch(() => {});
-      playPauseBtn.textContent = "❚❚";
+      setPlayingUI(true);
     } else {
       player.pause();
-      playPauseBtn.textContent = "▶";
+      setPlayingUI(false);
     }
   });
 
-  prevBtn?.addEventListener("click", () => loadSong(currentIndex - 1));
-  nextBtn?.addEventListener("click", () => loadSong(currentIndex + 1));
-  rewindBtn?.addEventListener("click", () => (player.currentTime -= 10));
-  forwardBtn?.addEventListener("click", () => (player.currentTime += 10));
-
   player.addEventListener("timeupdate", () => {
     if (!player.duration) return;
-    const progress = (player.currentTime / player.duration) * 100;
-    progressFill.style.width = `${progress}%`;
-    currentTimeEl.textContent = formatTime(player.currentTime);
-    durationEl.textContent = formatTime(player.duration);
+
+    const percent = (player.currentTime / player.duration) * 100;
+    if (progressFill) progressFill.style.width = `${percent}%`;
+    if (currentTimeEl) currentTimeEl.textContent = formatTime(player.currentTime);
+    if (durationEl) durationEl.textContent = formatTime(player.duration);
   });
 
   progressBar.addEventListener("click", e => {
+    if (!player.duration) return;
     const rect = progressBar.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const percent = Math.max(0, Math.min(1, offsetX / rect.width));
     player.currentTime = percent * player.duration;
   });
 
-  player.addEventListener("ended", () => nextBtn?.click());
+  player.addEventListener("play", () => setPlayingUI(true));
+  player.addEventListener("pause", () => setPlayingUI(false));
 
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }
-}
-
-export function animateSales(container = document) {
-  const stats = container.querySelectorAll(".stat-number");
-
-  stats.forEach(stat => {
-    if (stat.dataset.animated === "true") return;
-    stat.dataset.animated = "true";
-
-    const target = Number(stat.dataset.value);
-    if (isNaN(target)) return;
-
-    const isMoney = stat.dataset.money === "true";
-
-    let current = 0;
-    const increment = Math.max(1, Math.ceil(target / 60));
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        current = target;
-        clearInterval(timer);
-      }
-
-      stat.textContent = isMoney
-        ? `$${current.toLocaleString()}`
-        : current.toLocaleString();
-    }, 16);
+  player.addEventListener("ended", () => {
+    if (currentIndex + 1 < queue.length) {
+      loadSong(currentIndex + 1, true);
+    } else {
+      setPlayingUI(false);
+    }
   });
 }
 
@@ -199,9 +186,17 @@ function initSocialTabs(container = document) {
   tabs.forEach(tab => {
     tab.onclick = () => {
       const target = tab.dataset.social;
-      container.querySelectorAll(".social-tab").forEach(t => t.classList.remove("active"));
-      container.querySelectorAll(".social-panel").forEach(p => p.classList.remove("active"));
+
+      container
+        .querySelectorAll(".social-tab")
+        .forEach(t => t.classList.remove("active"));
+
+      container
+        .querySelectorAll(".social-panel")
+        .forEach(p => p.classList.remove("active"));
+
       tab.classList.add("active");
+
       const panel = container.querySelector(`#${target}`);
       if (panel) panel.classList.add("active");
     };
@@ -265,4 +260,4 @@ if (hasBarba) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initPage(document);
-});
+})
