@@ -179,6 +179,35 @@ function initMusic(container = document) {
   });
 }
 
+export function animateSales(container = document) {
+  const stats = container.querySelectorAll(".stat-number");
+
+  stats.forEach(stat => {
+    if (stat.dataset.animated === "true") return;
+    stat.dataset.animated = "true";
+
+    const target = Number(stat.dataset.value);
+    if (isNaN(target)) return;
+
+    const isMoney = stat.dataset.money === "true";
+
+    let current = 0;
+    const increment = Math.max(1, Math.ceil(target / 60));
+
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+
+      stat.textContent = isMoney
+        ? `$${current.toLocaleString()}`
+        : current.toLocaleString();
+    }, 16);
+  });
+}
+
 function initSocialTabs(container = document) {
   const tabs = container.querySelectorAll(".social-tab");
   if (!tabs.length) return;
