@@ -171,40 +171,12 @@ function initMusic(container = document) {
   player.addEventListener("pause", () => setPlayingUI(false));
 
   player.addEventListener("ended", () => {
+    // Auto-advance if more songs are queued; otherwise stop.
     if (currentIndex + 1 < queue.length) {
       loadSong(currentIndex + 1, true);
     } else {
       setPlayingUI(false);
     }
-  });
-}
-
-export function animateSales(container = document) {
-  const stats = container.querySelectorAll(".stat-number");
-
-  stats.forEach(stat => {
-    if (stat.dataset.animated === "true") return;
-    stat.dataset.animated = "true";
-
-    const target = Number(stat.dataset.value);
-    if (isNaN(target)) return;
-
-    const isMoney = stat.dataset.money === "true";
-
-    let current = 0;
-    const increment = Math.max(1, Math.ceil(target / 60));
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        current = target;
-        clearInterval(timer);
-      }
-
-      stat.textContent = isMoney
-        ? `$${current.toLocaleString()}`
-        : current.toLocaleString();
-    }, 16);
   });
 }
 
@@ -215,17 +187,9 @@ function initSocialTabs(container = document) {
   tabs.forEach(tab => {
     tab.onclick = () => {
       const target = tab.dataset.social;
-
-      container
-        .querySelectorAll(".social-tab")
-        .forEach(t => t.classList.remove("active"));
-
-      container
-        .querySelectorAll(".social-panel")
-        .forEach(p => p.classList.remove("active"));
-
+      container.querySelectorAll(".social-tab").forEach(t => t.classList.remove("active"));
+      container.querySelectorAll(".social-panel").forEach(p => p.classList.remove("active"));
       tab.classList.add("active");
-
       const panel = container.querySelector(`#${target}`);
       if (panel) panel.classList.add("active");
     };
@@ -270,16 +234,26 @@ if (hasBarba) {
         once({ next }) {
           initPage(next.container);
         },
-        enter({ next }) {
-          gsap.fromTo(
-            next.container,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
-          );
-          window.scrollTo(0, 0);
-          initPage(next.container);
+        leave({ current }) {
+          // Fade/slide the current page out
+          if (!hasGSAP) return;
+          return gsap.to(current.container, {
+            opacity: 0,
+            y: -12,
+            duration: 0.25,
+            ease: "power1.in"
+          });
         },
-        after({ next }) {
+        enter({ next }) {
+          // Reset scroll and animate the next page in
+          window.scrollTo(0, 0);
+          if (hasGSAP) {
+            gsap.fromTo(
+              next.container,
+              { opacity: 0, y: 12 },
+              { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
+            );
+          }
           initPage(next.container);
         }
       }
@@ -289,4 +263,4 @@ if (hasBarba) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initPage(document);
-})
+});
