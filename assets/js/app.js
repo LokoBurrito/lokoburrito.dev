@@ -180,6 +180,60 @@ function initMusic(container = document) {
   });
 }
 
+// Sales / stats counter animation
+function animateSales(container = document) {
+  const nums = container.querySelectorAll(".stat-number[data-value]");
+  if (!nums.length) return;
+
+  function format(value, isMoney) {
+    const rounded = Math.round(value);
+    const withCommas = rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return isMoney ? `$${withCommas}` : withCommas;
+  }
+
+  function run(el) {
+    if (el.dataset.animated) return;
+    el.dataset.animated = "true";
+
+    const target = Number(el.dataset.value);
+    const isMoney = el.dataset.money === "true";
+    if (!Number.isFinite(target)) return;
+
+    if (!hasGSAP) {
+      el.textContent = format(target, isMoney);
+      return;
+    }
+
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: target,
+      duration: 1.1,
+      ease: "power2.out",
+      onUpdate: () => {
+        el.textContent = format(obj.val, isMoney);
+      },
+      onComplete: () => {
+        el.textContent = format(target, isMoney);
+      }
+    });
+  }
+
+  // Animate when visible
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          run(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.35 }
+  );
+
+  nums.forEach(el => observer.observe(el));
+}
+
 function initSocialTabs(container = document) {
   const tabs = container.querySelectorAll(".social-tab");
   if (!tabs.length) return;
