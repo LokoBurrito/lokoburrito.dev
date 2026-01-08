@@ -180,45 +180,50 @@ function initMusic(container = document) {
   });
 }
 
-// Sales / stats counter animation
 function animateSales(container = document) {
   const nums = container.querySelectorAll(".stat-number[data-value]");
   if (!nums.length) return;
 
-  function format(value, isMoney) {
-    const rounded = Math.round(value);
-    const withCommas = rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return isMoney ? `$${withCommas}` : withCommas;
+  function format(value, isMoney, currency = "$") {
+  const rounded = Math.round(value);
+  const withCommas = rounded
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  return isMoney ? `${currency}${withCommas}` : withCommas;
   }
 
   function run(el) {
-    if (el.dataset.animated) return;
-    el.dataset.animated = "true";
+  if (el.dataset.animated) return;
+  el.dataset.animated = "true";
 
-    const target = Number(el.dataset.value);
-    const isMoney = el.dataset.money === "true";
-    if (!Number.isFinite(target)) return;
+  const target = Number(el.dataset.value);
+  const isMoney = el.dataset.money === "true";
+  const currency = el.dataset.currency || "$";
 
-    if (!hasGSAP) {
-      el.textContent = format(target, isMoney);
-      return;
-    }
+  if (!Number.isFinite(target)) return;
 
-    const obj = { val: 0 };
-    gsap.to(obj, {
-      val: target,
-      duration: 1.1,
-      ease: "power2.out",
-      onUpdate: () => {
-        el.textContent = format(obj.val, isMoney);
-      },
-      onComplete: () => {
-        el.textContent = format(target, isMoney);
-      }
-    });
+  if (!hasGSAP) {
+    el.textContent = format(target, isMoney, currency);
+    return;
   }
 
-  // Animate when visible
+  const obj = { val: 0 };
+
+  gsap.to(obj, {
+    val: target,
+    duration: 1.1,
+    ease: "power2.out",
+    onUpdate: () => {
+      el.textContent = format(obj.val, isMoney, currency);
+    },
+    onComplete: () => {
+      el.textContent = format(target, isMoney, currency);
+    }
+  });
+}
+
+
   const observer = new IntersectionObserver(
     entries => {
       entries.forEach(entry => {
